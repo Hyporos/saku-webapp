@@ -1,31 +1,16 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { PreviousScore } from "../components/PreviousScore";
 import Graph from "../components/Graph";
 import { ChatMessage } from "../components/ChatMessage";
+import useCharacter from "../hooks/useCharacter";
 dayjs.extend(utc);
 dayjs.extend(updateLocale);
 
 const Dashboard = () => {
   // Character object
-  const [characterData, setCharacterData] = useState<{
-    name: string;
-    class: string;
-    level?: number;
-    characterImgURL?: string;
-    memberSince: string;
-    scores: { score: number; date: string }[];
-  }>({
-    name: "",
-    class: "",
-    level: NaN,
-    characterImgURL: "",
-    memberSince: "",
-    scores: [],
-  });
+  const characterData = useCharacter("mikeszhang");
 
   // Set the day of the week that the culvert score gets reset (Sunday)
   dayjs.updateLocale("en", {
@@ -37,41 +22,6 @@ const Dashboard = () => {
     .startOf("week")
     .subtract(1, "day")
     .format("YYYY-MM-DD");
-
-  // Fetch character data
-
-  useEffect(() => {
-    // Saku Bot API
-    axios
-      .get("http://localhost:3000/api/character/mikeszhang")
-      .then((res) => {
-        setCharacterData((prevData) => ({
-          ...prevData,
-          name: res.data.name,
-          class: res.data.class,
-          memberSince: res.data.memberSince,
-          scores: res.data.scores,
-        }));
-      })
-      .catch((error) => {
-        console.error("Error fetching character:", error);
-      });
-
-    axios
-      .get(
-        "http://localhost:3000/api/rankings/mikeszhang"
-      )
-      .then((res) => {
-        setCharacterData((prevData) => ({
-          ...prevData,
-          characterImgURL: res.data.characterImgURL,
-          level: res.data.level,
-        }));
-      })
-      .catch((error) => {
-        console.error("Error fetching character:", error);
-      });
-  }, []);
 
   // Get the current score of the character
   const getCurrentScore = () => {
@@ -137,13 +87,17 @@ const Dashboard = () => {
     <section className="flex justify-center items-center gap-x-6 p-12 h-full">
       {/* Live Chat & Feed */}
       <div className="bg-panel rounded-xl w-full h-full max-w-[375px]">
-        <ChatMessage characterImgURL={characterData.characterImgURL as string} characterName={characterData.name} message="yo i'm actually so raw. gonna pass dannis and felix pretty soon pog" />
+        <ChatMessage
+          characterImgURL={characterData.characterImgURL as string}
+          characterName={characterData.name}
+          message="yo i'm actually so raw. gonna pass dannis and felix pretty soon pog"
+        />
       </div>
 
       <div className="flex flex-col gap-6 w-full h-full max-w-[545px]">
         {/* Character Info */}
         <div className="flex items-center justify-center bg-panel rounded-xl gap-16 px-8 py-4 h-[105px]">
-          <img src={characterData.characterImgURL}/>
+          <img src={characterData.characterImgURL} />
           <div>
             <h1 className="text-xl text-accent text-center">
               {characterData.name}
