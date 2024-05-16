@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import updateLocale from "dayjs/plugin/updateLocale";
 import { PreviousScore } from "../components/PreviousScore";
+import Graph from "../components/Graph";
+import { ChatMessage } from "../components/ChatMessage";
 dayjs.extend(utc);
 dayjs.extend(updateLocale);
 
@@ -13,14 +15,14 @@ const Dashboard = () => {
     name: string;
     class: string;
     level?: number;
-    characterImg?: string;
+    characterImgURL?: string;
     memberSince: string;
     scores: { score: number; date: string }[];
   }>({
     name: "",
     class: "",
     level: NaN,
-    characterImg: "",
+    characterImgURL: "",
     memberSince: "",
     scores: [],
   });
@@ -41,7 +43,7 @@ const Dashboard = () => {
   useEffect(() => {
     // Saku Bot API
     axios
-      .get("http://localhost:3000/api/character/dìssatisfied")
+      .get("http://localhost:3000/api/character/mikeszhang")
       .then((res) => {
         setCharacterData((prevData) => ({
           ...prevData,
@@ -55,19 +57,15 @@ const Dashboard = () => {
         console.error("Error fetching character:", error);
       });
 
-    // MapleStory Rankings API
     axios
       .get(
-        "https://www.nexon.com/api/maplestory/no-auth/v1/ranking/na?type=overall&id=legendary&reboot_index=1&page_index=1&character_name=dìssatisfied"
+        "http://localhost:3000/api/rankings/mikeszhang"
       )
       .then((res) => {
-        const characterImg = res.data.ranks[0].characterImgURL;
-        const level = res.data.ranks[0]?.level;
-
         setCharacterData((prevData) => ({
           ...prevData,
-          characterImg,
-          level,
+          characterImgURL: res.data.characterImgURL,
+          level: res.data.level,
         }));
       })
       .catch((error) => {
@@ -138,41 +136,50 @@ const Dashboard = () => {
   return (
     <section className="flex justify-center items-center gap-x-6 p-12 h-full">
       {/* Live Chat & Feed */}
-      <div className="bg-panel rounded-xl w-full h-full max-w-[375px]"></div>
+      <div className="bg-panel rounded-xl w-full h-full max-w-[375px]">
+        <ChatMessage characterImgURL={characterData.characterImgURL} characterName={characterData.name} message="yo i'm actually so raw. gonna pass dannis and felix pretty soon pog" />
+      </div>
 
       <div className="flex flex-col gap-6 w-full h-full max-w-[545px]">
         {/* Character Info */}
         <div className="flex items-center justify-center bg-panel rounded-xl gap-16 px-8 py-4 h-[105px]">
-          <img src={characterData.characterImg} />
+          <img src={characterData.characterImgURL}/>
           <div>
             <h1 className="text-xl text-accent text-center">
               {characterData.name}
             </h1>
-            <div className="flex justify-between">
-              <h2>Level {characterData.level}</h2>
-              <h2>{characterData.class}</h2>
+            <div className="flex justify-center">
+              <h2>
+                Level {characterData.level} {characterData.class}
+              </h2>
             </div>
             <h2 className="flex justify-between gap-2">
               <h2>Member Since:</h2>
-              <h2 className="text-accent">{characterData.memberSince}</h2>
+              <h2 className="text-accent">
+                {dayjs(characterData.memberSince).format("MMM D YYYY")}
+              </h2>
             </h2>
           </div>
         </div>
 
         {/* Current / Best Score */}
         <div className="flex text-center gap-6 h-[80px]">
-          <div className="bg-panel rounded-xl px-8 py-4 w-full">
+          <div className="flex flex-col justify-center bg-panel rounded-xl px-8 py-4 w-full">
             <h1 className="text-xl">Current Score</h1>
             <h2 className="text-xl text-accent">{getCurrentScore()}</h2>
           </div>
-          <div className="bg-panel rounded-xl px-8 py-4 w-full">
+          <div className="flex flex-col justify-center bg-panel rounded-xl px-8 py-4 w-full">
             <h1 className="text-xl">Personal Best</h1>
             <h2 className="text-xl text-accent">{getPersonalBest()}</h2>
           </div>
         </div>
 
         {/* Culvert Graph */}
-        <div className="bg-panel rounded-xl h-full"></div>
+        <div className="flex flex-col justify-between items-center bg-panel rounded-xl p-8 h-full">
+          <h1 className="text-xl">Culvert Graph</h1>
+          <div className="bg-tertiary/20 rounded-full w-full h-px m-6" />
+          <Graph />
+        </div>
       </div>
 
       <div className="flex flex-col gap-6 w-full h-full max-w-[375px]">
@@ -198,7 +205,7 @@ const Dashboard = () => {
           <div className="bg-tertiary/20 rounded-full w-full h-px" />
 
           <h1 className="text-lg">
-            Lifetime Scores:{" "}
+            Lifetime Score:{" "}
             <span className="text-accent">{getLifetimeScore()}</span>
           </h1>
         </div>
