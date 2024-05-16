@@ -1,7 +1,3 @@
-import { cn } from "../lib/utils";
-import { FaChevronUp, FaChevronDown, FaEquals } from "react-icons/fa";
-import dayjs from "dayjs";
-
 interface ChatMessageProps {
   characterImgURL: string;
   characterName: string;
@@ -14,7 +10,7 @@ const ChatMessage = ({
   message,
 }: ChatMessageProps) => {
   return (
-    <div className="flex justify-between items-center bg-background text-sm  rounded-2xl drop-shadow-[0_0_4px_rgba(0,0,0,0.25)] px-4 py-2 max-h-[55px]">
+    <div className="flex justify-between items-center bg-background text-sm rounded-2xl drop-shadow-[0_0_4px_rgba(0,0,0,0.25)] px-4 py-2 max-h-[55px]">
       <img
         className="rounded-full mr-4"
         src={characterImgURL}

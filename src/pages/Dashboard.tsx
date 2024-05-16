@@ -137,7 +137,7 @@ const Dashboard = () => {
     <section className="flex justify-center items-center gap-x-6 p-12 h-full">
       {/* Live Chat & Feed */}
       <div className="bg-panel rounded-xl w-full h-full max-w-[375px]">
-        <ChatMessage characterImgURL={characterData.characterImgURL} characterName={characterData.name} message="yo i'm actually so raw. gonna pass dannis and felix pretty soon pog" />
+        <ChatMessage characterImgURL={characterData.characterImgURL as string} characterName={characterData.name} message="yo i'm actually so raw. gonna pass dannis and felix pretty soon pog" />
       </div>
 
       <div className="flex flex-col gap-6 w-full h-full max-w-[545px]">
