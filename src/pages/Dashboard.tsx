@@ -10,7 +10,7 @@ dayjs.extend(updateLocale);
 
 const Dashboard = () => {
   // Character object
-  const characterData = useCharacter("mikeszhang");
+  const characterData = useCharacter("dánnis");
 
   // Set the day of the week that the culvert score gets reset (Sunday)
   dayjs.updateLocale("en", {
@@ -90,7 +90,7 @@ const Dashboard = () => {
         <ChatMessage
           characterImgURL={characterData.characterImgURL as string}
           characterName={characterData.name}
-          message="yo i'm actually so raw. gonna pass dannis and felix pretty soon pog"
+          message="yo i'm actually so raw. bro im so raw. omg i'm raw af. someone tell me why i'm so raw"
         />
       </div>
 

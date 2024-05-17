@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import useCharacter from "../hooks/useCharacter";
 
 const Graph = () => {
-  const characterData = useCharacter("mikeszhang");
+  const characterData = useCharacter("dánnis");
 
   // Get the last 8 scores
   const graphData = characterData.scores.slice(-8).map((score) => ({
@@ -37,8 +37,8 @@ const Graph = () => {
 
     return (
       <div className="flex flex-col bg-background rounded-lg drop-shadow-[0_0_4px_rgba(0,0,0,0.25)] space-y-1 p-4">
-        <p className="text-tertiary">{label}</p>
-        <p className="text-accent text-sm">Score : {payload[0].value}</p>
+        <p className="text-tertiary font-light">{label}</p>
+        <p className="text-accent text-sm font-light">Score : {payload[0].value}</p>
       </div>
     );
   };
@@ -95,11 +95,11 @@ const Graph = () => {
           fill="url(#gradient)"
           dot={{
             stroke: "#FFBDD5",
-            r: 1,
+            r: 0.5,
           }}
           activeDot={{
             stroke: "#FFBDD5",
-            r: 2.5,
+            r: 1.5,
           }}
         />
       </AreaChart>
